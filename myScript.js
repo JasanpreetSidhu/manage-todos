@@ -6,9 +6,37 @@ const todoList = document.getElementById("todo-list");
 document.addEventListener("DOMContentLoaded", initApp);
 
 function initApp() {
+  getTodos(10);
   // event handlers
   form.addEventListener("submit", createNewTodo);
-  getTodos(10);
+  todoList.addEventListener("click", toggleTodoStatus);
+}
+
+function toggleTodoStatus(e) {
+  if (e.target.classList.contains("todo")) {
+    const todo = e.target;
+    const currentStatus = todo.classList.contains("done");
+    sendPatchRequest(todo.id, currentStatus).then((modifiedTodo) =>
+      markTodoDoneOnDOM(todo, modifiedTodo.completed)
+    );
+    console.log(currentStatus);
+  }
+}
+
+function markTodoDoneOnDOM(selectedNode, updatedStatus) {
+  selectedNode.classList.toggle("done", updatedStatus);
+}
+
+function sendPatchRequest(todoId, currentStatus) {
+  return fetch(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      completed: !currentStatus,
+    }),
+    headers: {
+      "content-type": "application/json",
+    },
+  }).then((response) => response.json());
 }
 
 function getTodos(limit) {
@@ -26,8 +54,11 @@ function showTodos(todosArr) {
 }
 
 function createTodoNode(todoObject) {
+  //console.log(todoObject);
   const div = document.createElement("div");
   div.innerText = todoObject.title;
+  div.id = todoObject.id;
+  div.classList.add("todo");
   if (todoObject.completed) {
     div.classList.add("done");
   }
