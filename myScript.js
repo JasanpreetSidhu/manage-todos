@@ -6,6 +6,8 @@ const todoList = document.getElementById("todo-list");
 document.addEventListener("DOMContentLoaded", initApp);
 
 function initApp() {
+  // event handlers
+  form.addEventListener("submit", createNewTodo);
   getTodos(10);
 }
 
@@ -30,4 +32,33 @@ function createTodoNode(todoObject) {
     div.classList.add("done");
   }
   return div;
+}
+
+function createNewTodo(e) {
+  e.preventDefault();
+  if (formField.value) {
+    sendPostRequest(formField.value).then((newTodoObj) =>
+      showNewTodo(newTodoObj)
+    );
+    formField.value = "";
+  }
+}
+
+function sendPostRequest(newTask) {
+  return fetch("https://jsonplaceholder.typicode.com/todos", {
+    method: "POST",
+    body: JSON.stringify({
+      title: newTask,
+      completed: false,
+      userId: 1,
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  }).then((response) => response.json());
+}
+
+function showNewTodo(todoObject) {
+  const newTodoNode = createTodoNode(todoObject);
+  todoList.appendChild(newTodoNode);
 }
