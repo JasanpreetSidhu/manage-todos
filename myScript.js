@@ -10,6 +10,30 @@ function initApp() {
   // event handlers
   form.addEventListener("submit", createNewTodo);
   todoList.addEventListener("click", toggleTodoStatus);
+  todoList.addEventListener("dblclick", deleteTodo);
+}
+
+function deleteTodo(e) {
+  if (e.target.classList.contains("todo")) {
+    const todoNode = e.target;
+    const todoObjectId = todoNode.id.slice(1);
+    const isSuccess = sendDeleteRequest(todoObjectId);
+    if (isSuccess) {
+      deleteTodoFromDOM(todoNode.id);
+    }
+  }
+}
+
+function deleteTodoFromDOM(todoNodeId) {
+  const todoNode = todoList.querySelector(`#${todoNodeId}`);
+  console.log(todoNodeId);
+  todoList.removeChild(todoNode);
+}
+
+function sendDeleteRequest(todoId) {
+  return fetch(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {
+    method: "DELETE",
+  }).then((response) => response.status === 200);
 }
 
 function toggleTodoStatus(e) {
@@ -57,7 +81,7 @@ function createTodoNode(todoObject) {
   //console.log(todoObject);
   const div = document.createElement("div");
   div.innerText = todoObject.title;
-  div.id = todoObject.id;
+  div.id = "t" + todoObject.id;
   div.classList.add("todo");
   if (todoObject.completed) {
     div.classList.add("done");
