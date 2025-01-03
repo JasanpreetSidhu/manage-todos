@@ -2,7 +2,7 @@
 
 ## Overview
 
-Manage-Todos app interfaces with a REST API [JSON Placeholder](https://jsonplaceholder.typicode.com/) to provide comprehensive todo list management capabilities. The application enables users to view, add, update, and delete tasks efficiently.
+This [app](https://jasanpreetsidhu.github.io/manage-todos/) interfaces with a REST API [JSON Placeholder](https://jsonplaceholder.typicode.com/) to provide comprehensive todo list management capabilities. The application enables users to view, add, update, and delete tasks efficiently.
 
 ## Key Features
 
