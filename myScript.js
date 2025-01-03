@@ -3,6 +3,8 @@ const form = document.querySelector("#todo-form");
 const formField = document.getElementById("title");
 const todoList = document.getElementById("todo-list");
 
+const apiUrl = "https://jsonplaceholder.typicode.com/todos";
+
 document.addEventListener("DOMContentLoaded", initApp);
 
 function initApp() {
@@ -19,19 +21,13 @@ function deleteTodo(e) {
     const todoObjectId = todoNode.id.slice(1);
     const isSuccess = sendDeleteRequest(todoObjectId);
     if (isSuccess) {
-      deleteTodoFromDOM(todoNode.id);
+      e.target.remove();
     }
   }
 }
 
-function deleteTodoFromDOM(todoNodeId) {
-  const todoNode = todoList.querySelector(`#${todoNodeId}`);
-  console.log(todoNodeId);
-  todoList.removeChild(todoNode);
-}
-
 function sendDeleteRequest(todoId) {
-  return fetch(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {
+  return fetch(`${apiUrl}/${todoId}`, {
     method: "DELETE",
   }).then((response) => response.status === 200);
 }
@@ -52,7 +48,7 @@ function markTodoDoneOnDOM(selectedNode, updatedStatus) {
 }
 
 function sendPatchRequest(todoId, currentStatus) {
-  return fetch(`https://jsonplaceholder.typicode.com/todos/${todoId}`, {
+  return fetch(`${apiUrl}/${todoId}`, {
     method: "PATCH",
     body: JSON.stringify({
       completed: !currentStatus,
@@ -64,7 +60,7 @@ function sendPatchRequest(todoId, currentStatus) {
 }
 
 function getTodos(limit) {
-  fetch(`https://jsonplaceholder.typicode.com/todos?_limit=${limit}`)
+  fetch(`${apiUrl}?_limit=${limit}`)
     .then((response) => response.json())
     .then((data) => showTodos(data))
     .catch((error) => alert(error));
@@ -100,7 +96,7 @@ function createNewTodo(e) {
 }
 
 function sendPostRequest(newTask) {
-  return fetch("https://jsonplaceholder.typicode.com/todos", {
+  return fetch(apiUrl, {
     method: "POST",
     body: JSON.stringify({
       title: newTask,
